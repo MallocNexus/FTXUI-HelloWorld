@@ -25,8 +25,8 @@ TEST_CASE("Main Application Flow", "[app]") {
         // Trigger "Copy"
         comp->OnEvent(Event::Return);
 
-        // Move down to "Paste"
-        comp->OnEvent(Event::ArrowDown);
+        // Move right to "Paste" (submenu is horizontal)
+        comp->OnEvent(Event::ArrowRight);
 
         // Trigger "Paste"
         comp->OnEvent(Event::Return);
@@ -39,8 +39,11 @@ TEST_CASE("Main Application Flow", "[app]") {
         state.main_text_content = "Test File Content";
         state.save_filename = "test.txt";
 
-        // Start at top menu ("File"). Move down to File sub-menu. "Save" is focused.
+        // Start at top menu ("File"). Move down to File sub-menu. "Quit" is focused.
         comp->OnEvent(Event::ArrowDown);
+
+        // Move right to "Save"
+        comp->OnEvent(Event::ArrowRight);
 
         // Trigger "Save" to open modal
         comp->OnEvent(Event::Return);
@@ -59,8 +62,8 @@ TEST_CASE("Main Application Flow", "[app]") {
         REQUIRE(content == "Test File Content");
         file.close();
 
-        // Modal closed, focus is back on "Save". Move down to "Quit".
-        comp->OnEvent(Event::ArrowDown);
+        // Modal closed, focus is back on "Save". Move left to "Quit".
+        comp->OnEvent(Event::ArrowLeft);
 
         // Trigger "Quit"
         comp->OnEvent(Event::Return);

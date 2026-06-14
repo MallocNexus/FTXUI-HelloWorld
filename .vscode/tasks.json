@@ -23,10 +23,7 @@
                 "--build",
                 "build"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "dependsOn": [
                 "CMake: Configure"
             ],
@@ -34,6 +31,20 @@
                 "$gcc"
             ],
             "detail": "Build the CMake project."
+        },
+        {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "./build/run_tests",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "CMake: Build"
+            ],
+            "problemMatcher": [],
+            "detail": "Run the test suite."
         }
     ]
 }
