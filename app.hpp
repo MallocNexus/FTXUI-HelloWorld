@@ -8,6 +8,14 @@ struct AppState {
     std::string save_filename = "filename.txt";
 };
 
+enum MenuIndex {
+    FILE_QUIT = 0,
+    FILE_SAVE = 1,
+    EDIT_COPY = 0,
+    EDIT_PASTE = 1,
+    HELP_VERSION = 0
+};
+
 class App {
 public:
     App(AppState& state, std::function<void()> on_quit);
@@ -20,7 +28,7 @@ private:
     std::vector<std::string> top_menu_entries = {"File", "Edit", "Help"};
     int top_menu_selected = 0;
 
-    std::vector<std::string> file_entries = {"Save", "Quit"};
+    std::vector<std::string> file_entries = {"Quit", "Save"};
     int file_selected = 0;
 
     std::vector<std::string> edit_entries = {"Copy", "Paste"};

@@ -7,27 +7,41 @@ using namespace ftxui;
 App::App(AppState& state, std::function<void()> on_quit) : state(state), on_quit(on_quit) {
     auto top_menu = Menu(&top_menu_entries, &top_menu_selected, MenuOption::HorizontalAnimated());
 
-    auto main_text_input = Input(&this->state.main_text_content, "Type your text here...");
+    InputOption main_input_option = InputOption::Default();
+    main_input_option.content = &this->state.main_text_content;
+    main_input_option.placeholder = "Type your text here...";
+    main_input_option.transform = [](InputState state) {
+        if (state.is_placeholder) {
+            state.element |= dim;
+        }
+        if (state.focused) {
+            state.element |= color(Color::Green);
+        } else {
+            state.element |= color(Color::White);
+        }
+        return state.element;
+    };
+    auto main_text_input = Input(main_input_option);
 
     auto filename_input = Input(&this->state.save_filename, "filename.txt");
 
-    MenuOption file_option;
+    MenuOption file_option = MenuOption::HorizontalAnimated();
     file_option.on_enter = [this] {
-        if (file_selected == 0) { show_save_modal = true; }
-        else if (file_selected == 1) { this->on_quit(); }
+        if (file_selected == FILE_SAVE) { show_save_modal = true; }
+        else if (file_selected == FILE_QUIT) { this->on_quit(); }
     };
     auto file_menu = Menu(&file_entries, &file_selected, file_option);
 
-    MenuOption edit_option;
+    MenuOption edit_option = MenuOption::HorizontalAnimated();
     edit_option.on_enter = [this] {
-        if (edit_selected == 0) { clipboard = this->state.main_text_content; }
-        else if (edit_selected == 1) { this->state.main_text_content += clipboard; }
+        if (edit_selected == EDIT_COPY) { clipboard = this->state.main_text_content; }
+        else if (edit_selected == EDIT_PASTE) { this->state.main_text_content += clipboard; }
     };
     auto edit_menu = Menu(&edit_entries, &edit_selected, edit_option);
 
-    MenuOption help_option;
+    MenuOption help_option = MenuOption::HorizontalAnimated();
     help_option.on_enter = [this] {
-        if (help_selected == 0) { show_version_modal = true; }
+        if (help_selected == HELP_VERSION) { show_version_modal = true; }
     };
     auto help_menu = Menu(&help_entries, &help_selected, help_option);
 
