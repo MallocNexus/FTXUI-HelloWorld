@@ -1,7 +1,7 @@
 #pragma once
 #include <ftxui/component/component.hpp>
-#include <string>
 #include <functional>
+#include <string>
 
 struct AppState {
     std::string main_text_content;
@@ -18,11 +18,11 @@ enum MenuIndex {
 };
 
 class App {
-public:
+   public:
     App(AppState& state, std::function<void()> on_quit);
     ftxui::Component GetComponent();
 
-private:
+   private:
     AppState& state;
     std::function<void()> on_quit;
 
