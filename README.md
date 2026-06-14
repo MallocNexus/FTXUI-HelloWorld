@@ -47,3 +47,17 @@ To execute the tests:
 ```bash
 ./run_tests
 ```
+
+## Appendix
+
+### Ninja
+
+Ninja is used as the primary build system generator for this project because it is designed for maximum speed. Unlike traditional Makefiles, Ninja evaluates dependencies almost instantly and efficiently parallelizes the compilation process. For a modern C++ project that pulls in external libraries like FTXUI and Catch2, using Ninja significantly reduces both the initial setup time and incremental recompilation times, resulting in a much smoother and faster development experience.
+
+### FTXUI
+
+[FTXUI](https://github.com/ArthurSonzogni/FTXUI) (Functional Terminal (X) User Interface) is a modern, cross-platform C++ library for building terminal-based user interfaces. It provides a highly declarative and functional approach to defining UI layouts. In this project, FTXUI powers the entire visual interface—handling the rendering of menus, input areas, and modals, as well as smoothly managing keyboard navigation and terminal escape sequences.
+
+### Catch2
+
+[Catch2](https://github.com/catchorg/Catch2) is a popular, modern, and macro-free C++ testing framework. It is designed to be extremely easy to use, allowing developers to write tests with natural, expressive assertions. For this project, Catch2 drives our integration tests. It allows us to instantiate the UI components headlessly, simulate user keyboard events, and verify that the underlying application state responds correctly.
