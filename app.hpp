@@ -6,6 +6,7 @@
 struct AppState {
     std::string main_text_content;
     std::string save_filename = "filename.txt";
+    int main_cursor_position = 0;
 };
 
 enum MenuIndex {

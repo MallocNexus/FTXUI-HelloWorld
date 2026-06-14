@@ -1,7 +1,7 @@
 #include "app.hpp"
 #include <ftxui/dom/elements.hpp>
+#include <ftxui/component/event.hpp>
 #include <fstream>
-
 using namespace ftxui;
 
 App::App(AppState& state, std::function<void()> on_quit) : state(state), on_quit(on_quit) {
@@ -10,6 +10,7 @@ App::App(AppState& state, std::function<void()> on_quit) : state(state), on_quit
     InputOption main_input_option = InputOption::Default();
     main_input_option.content = &this->state.main_text_content;
     main_input_option.placeholder = "Type your text here...";
+    main_input_option.cursor_position = &this->state.main_cursor_position;
     main_input_option.transform = [](InputState state) {
         if (state.is_placeholder) {
             state.element |= dim;
@@ -21,7 +22,35 @@ App::App(AppState& state, std::function<void()> on_quit) : state(state), on_quit
         }
         return state.element;
     };
-    auto main_text_input = Input(main_input_option);
+    auto main_text_input_base = Input(main_input_option);
+    auto main_text_input = CatchEvent(main_text_input_base, [this](Event event) {
+        bool is_start_of_line = (event == Event::Home || event == Event::ArrowLeftCtrl || event == Event::CtrlA || event == Event::Special("\x1b[1;9D") || event == Event::Special("\x1b[1;3D"));
+        bool is_end_of_line = (event == Event::End || event == Event::ArrowRightCtrl || event == Event::CtrlE || event == Event::Special("\x1b[1;9C") || event == Event::Special("\x1b[1;3C"));
+
+        if (is_start_of_line) {
+            int& pos = this->state.main_cursor_position;
+            const std::string& text = this->state.main_text_content;
+            int start = pos - 1;
+            while (start >= 0 && text[start] != '\n') {
+                start--;
+            }
+            pos = start + 1;
+            return true;
+        }
+
+        if (is_end_of_line) {
+            int& pos = this->state.main_cursor_position;
+            const std::string& text = this->state.main_text_content;
+            int end = pos;
+            while (end < (int)text.size() && text[end] != '\n') {
+                end++;
+            }
+            pos = end;
+            return true;
+        }
+
+        return false;
+    });
 
     auto filename_input = Input(&this->state.save_filename, "filename.txt");
 
